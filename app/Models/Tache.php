@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Tache extends Model
 {
     use HasFactory;
+
+    public static function getStatuses():array {
+
+        return [
+            'Todo', 'Done'
+        ];
+    }
 }

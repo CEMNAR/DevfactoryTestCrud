@@ -29,7 +29,7 @@
                 <label for="description" class="form-label">Status</label>
                 <select name="status" id="status" class="form-control">
                     @foreach($statuses as $status)
-                        <option value="{{ $status['value'] }}"{{ $tache->status === $status['value'] ? 'selected' : '' }}>{{ $status['label'] }}</option>
+                        <option value="{{ $status }}"{{ $tache->status === $status ? 'selected' : '' }}>{{ $status }}</option>
                     @endforeach
                 </select>
             </div>

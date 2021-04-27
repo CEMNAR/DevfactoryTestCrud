@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tache;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class TacheController extends Controller
 {
@@ -25,18 +27,7 @@ class TacheController extends Controller
      */
     public function create()
     {
-        $statuses = [
-        [
-            'label' => 'Todo',
-            'value' => 'Todo'
-        ],
-        [
-            'label' => 'Done',
-            'value' => 'Done'
-        ],
-        ];
-
-        return view('create', compact('statuses'));
+        return view('create', ['statuses' => User::getStatuses()]);
     }
 
     /**ÒÒ
@@ -48,7 +39,9 @@ class TacheController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required'
+            'title' => 'required|string|max:50|min:5',
+            'description' => 'required|string|max:500|min:20',
+            'statuses' => Rule::in(Tache::getStatuses())
         ]);
 
         $tache = new Tache();
@@ -79,18 +72,8 @@ class TacheController extends Controller
     public function edit($id)
     {
         $tache = Tache::findOrFail($id);
-        $statuses = [
-            [
-                'label' => 'Todo',
-                'value' => 'Todo'
-            ],
-            [
-                'label' => 'Done',
-                'value' => 'Done'
-            ],
-        ];
 
-        return view('edit', compact('statuses', 'tache'));
+        return view('edit', ['statuses' => Tache::getStatuses(), 'tache' => $tache]);
     }
 
     /**
