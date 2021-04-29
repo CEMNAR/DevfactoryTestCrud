@@ -28,7 +28,7 @@
                 </span>
                     <div class="card-body">
                         <div class="card-text">
-                            <div class="float-start" style="min-height: 200px">
+                            <div style="min-height: 200px">
                                 @if($tache->status === "Todo")
                                     {{ $tache->description }}
                                 @else

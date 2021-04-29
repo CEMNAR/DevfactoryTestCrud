@@ -27,7 +27,7 @@ class TacheController extends Controller
      */
     public function create()
     {
-        return view('create', ['statuses' => User::getStatuses()]);
+        return view('create', ['statuses' => Tache::getStatuses()]);
     }
 
     /**ÒÒ
@@ -38,17 +38,13 @@ class TacheController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:50|min:5',
             'description' => 'required|string|max:500|min:20',
             'statuses' => Rule::in(Tache::getStatuses())
         ]);
 
-        $tache = new Tache();
-        $tache->title = $request->title;
-        $tache->description = $request->description;
-        $tache->status = $request->status;
-        $tache->save();
+        Tache::create($validated);
         return redirect()->route('index');
     }
 
@@ -87,7 +83,9 @@ class TacheController extends Controller
     {
         $tache = Tache::findOrFail($id);
         $request->validate([
-            'title' => 'required'
+            'title' => 'required|string|max:50|min:5',
+            'description' => 'required|string|max:500|min:20',
+            'statuses' => Rule::in(Tache::getStatuses())
         ]);
 
         $tache->title = $request->title;

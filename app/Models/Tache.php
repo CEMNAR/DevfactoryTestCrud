@@ -9,6 +9,12 @@ class Tache extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'description',
+        'status'
+    ];
+
     public static function getStatuses():array {
 
         return [
