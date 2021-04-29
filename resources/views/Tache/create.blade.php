@@ -12,7 +12,15 @@
         </div>
         <div class="clearfix"></div>
     </div>
-
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="card card-body bg-light p-4">
         <form action="{{ route('tache.store') }}" method="POST">
             @csrf
@@ -24,6 +32,7 @@
                 <label for="description" class="form-label">Description</label>
                 <textarea type="text" class="form-control" id="description" name="description" rows="5"></textarea>
             </div>
+            <input name="project_id" type="hidden" value="2">
             <div class="mb-3">
                 <label for="description" class="form-label">Status</label>
                 <select name="status" id="status" class="form-control">

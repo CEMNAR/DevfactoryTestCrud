@@ -18,8 +18,11 @@ class CreateTachesTable extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->enum('status', ['Todo', 'Done'])->default('Todo');
+            $table->unsignedBigInteger('project_id');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent();
+
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });
     }
 

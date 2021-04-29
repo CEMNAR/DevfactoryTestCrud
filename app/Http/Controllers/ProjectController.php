@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tache;
-use App\Models\User;
+use App\Models\Project;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
-class TacheController extends Controller
+class ProjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return string
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $taches = Tache::orderBy('id', 'desc')->get();
-        return view('tache.index', compact('taches'));
+        return view('Project/index', [
+            'projects' => Project::all()
+        ]);
     }
 
     /**
@@ -27,10 +26,10 @@ class TacheController extends Controller
      */
     public function create()
     {
-        return view('tache.create', ['statuses' => Tache::getStatuses()]);
+        return view('project.create');
     }
 
-    /**ÒÒ
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -41,11 +40,9 @@ class TacheController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:50|min:5',
             'description' => 'required|string|max:500|min:20',
-            'statuses' => Rule::in(Tache::getStatuses()),
-            'project_id' => 'required|exists:taches'
         ]);
-        Tache::create($validated);
-        return redirect()->route('tache.index');
+        Project::create($validated);
+        return redirect()->route('project.index');
     }
 
     /**
@@ -67,9 +64,7 @@ class TacheController extends Controller
      */
     public function edit($id)
     {
-        $tache = Tache::findOrFail($id);
-
-        return view('tache.edit', ['statuses' => Tache::getStatuses(), 'tache' => $tache]);
+        //
     }
 
     /**
@@ -81,18 +76,7 @@ class TacheController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $tache = Tache::findOrFail($id);
-        $request->validate([
-            'title' => 'required|string|max:50|min:5',
-            'description' => 'required|string|max:500|min:20',
-            'statuses' => Rule::in(Tache::getStatuses())
-        ]);
-
-        $tache->title = $request->title;
-        $tache->description = $request->description;
-        $tache->status = $request->status;
-        $tache->save();
-        return redirect()->route('tache.index');
+        //
     }
 
     /**
@@ -103,8 +87,6 @@ class TacheController extends Controller
      */
     public function destroy($id)
     {
-        $tache = Tache::findOrFail($id);
-        $tache->delete();
-        return redirect()->route('tache.index');
+        //
     }
 }
