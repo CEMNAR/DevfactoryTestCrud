@@ -15,6 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [TacheController::class, 'index'])->name('index');
+Route::get('/', [ProjectController::class, 'index'])->name('index');
 Route::resource('tache',TacheController::class);
 Route::resource('project', ProjectController::class);

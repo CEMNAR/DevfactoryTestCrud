@@ -1,36 +1,46 @@
 @extends('layouts')
-
+@section('dashboard-title')
+    Tache du projet {{ $project->name }}
+@endsection
 @section('main-content')
     <div>
         <div class="float-start">
-            <h4 class="pb-3">Mes Projets</h4>
+            <h4 class="pb-3">Mes taches du projet</h4>
         </div>
         <div class="float-end">
-            <a href="{{ route('project.create') }}" class="btn btn-info">
-                <i class="fa fa-plus-circle"></i> Créer un projet
+            @if($taches->count())
+            <a href="{{ route('tache.create', ['project_id' => $project->id]) }}" class="btn btn-info">
+                <i class="fa fa-plus-circle"></i> Créer une tâche
+            </a>
+            @endif
+            <a href="{{ route('project.index') }}" class="btn btn-info">
+                <i class="fa fa-plus-circle"></i> Retour à la liste des prôjets
             </a>
         </div>
         <div class="clearfix"></div>
     </div>
     <div class="container">
         <div class="row">
-            @foreach ($projects as $project)
+            @foreach ($taches ?? '' as $tache)
                 <div class="card border border-dark mb-3 p-3 m-4" style="max-width: 18rem;">
+                    <h5 class="card-header rounded-pill " style="border-bottom: none">
+                            {{ $tache->title }}`
+                    </h5>
                     <span class="badge rounded-pill bg-warning mt-3">
-                    {{ $project->created_at->diffForHumans() }}
+                    {{ $tache->created_at->diffForHumans() }}
                     </span>
                     <div class="card-body">
                         <div class="card-text">
-                            <div class="float-start" style="min-height: 200px">
-                                {{ $project->description }}
+                            <div style="min-height: 200px">
+                                {{ $tache->description }}
                                 <br>
                             </div>
                             <div class="float-end">
-                                <a href="{{ route('project.edit', $project->id) }}"
+                                <a href="{{ route('tache.edit', $tache->id) }}"
                                    class="btn btn-success">
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <form action="{{ route('project.destroy', $project->id) }}" style="display: inline"
+                                <form action="{{ route('tache.destroy', $tache->id) }}" style="display: inline"
                                       method="POST">
                                     @csrf
                                     @method('DELETE')
@@ -47,13 +57,13 @@
         </div>
     </div>
 
-    @if(count($projects) === 0)
+    @if(count($taches ?? '') === 0)
         <div class="alert alert-danger p-2">
-            <p>Pas de project créé, cliquer ici pour créer un projet</p>
+            <p>Pas de tache créée, cliquer ici pour créer une tache dans le projet</p>
             <br>
             <br>
-            <a href="{{ route('project.create') }}" class="btn btn-info">
-                <i class="fa fa-plus-circle"></i> Créer un projet
+            <a href="{{ route('tache.create', ['project_id' => $project->id]) }}" class="btn btn-info">
+                <i class="fa fa-plus-circle"></i> Créer une tâche
             </a>
         </div>
     @endif

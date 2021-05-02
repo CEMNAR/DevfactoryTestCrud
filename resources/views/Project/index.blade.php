@@ -1,5 +1,7 @@
 @extends('layouts')
-
+@section('dashboard-title')
+    Mes projets
+@endsection
 @section('main-content')
     <div>
         <div class="float-start">
@@ -16,16 +18,21 @@
         <div class="row">
             @foreach ($projects as $project)
                 <div class="card border border-dark mb-3 p-3 m-4" style="max-width: 18rem;">
+                    <h5 class="card-header rounded-pill " style="border-bottom: none">{{ $project->name }}</h5>
                     <span class="badge rounded-pill bg-warning mt-3">
                     {{ $project->created_at->diffForHumans() }}
                     </span>
                     <div class="card-body">
                         <div class="card-text">
-                            <div class="float-start" style="min-height: 200px">
+                            <div style="min-height: 200px">
                                 {{ $project->description }}
                                 <br>
                             </div>
                             <div class="float-end">
+                                <a href="{{ route('project.show', $project->id) }}"
+                                   class="btn btn-success">
+                                    <i class="fa fa-folder-open"></i>
+                                </a>
                                 <a href="{{ route('project.edit', $project->id) }}"
                                    class="btn btn-success">
                                     <i class="fa fa-edit"></i>

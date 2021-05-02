@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Tache;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class ProjectController extends Controller
 {
@@ -38,7 +40,7 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:50|min:5',
+            'name' => 'required|string|max:50|min:5',
             'description' => 'required|string|max:500|min:20',
         ]);
         Project::create($validated);
@@ -51,9 +53,16 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($project_id)
     {
-        //
+        $taches = Tache::where('project_id', $project_id)->get();
+        $project = Project::findOrFail($project_id);
+
+        //On passe les taches et l'id du projet à la vue blade
+        return view('project.show', [
+            'taches' => $taches,
+            'project' => $project
+        ]);
     }
 
     /**
@@ -64,7 +73,10 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        //
+        $project = Project::findOrFail($id);
+
+        return view('project.edit', [
+            'project' => $project ]);
     }
 
     /**
@@ -76,7 +88,16 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $project = Project::findOrFail($id);
+        $request->validate([
+            'name' => 'required|string|max:50|min:5',
+            'description' => 'required|string|max:500|min:20',
+        ]);
+
+        $project->name = $request->name;
+        $project->description = $request->description;
+        $project->save();
+        return redirect()->route('project.index');
     }
 
     /**
@@ -87,6 +108,8 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $project = Project::findOrFail($id);
+        $project->delete();
+        return redirect()->route('project.index');
     }
 }

@@ -1,5 +1,7 @@
 @extends('layouts')
-
+@section('dashboard-title')
+    Créer une tache pour le projet {{ $project->name }}
+@endsection
 @section('main-content')
     <div>
         <div class="float-start">
@@ -32,7 +34,7 @@
                 <label for="description" class="form-label">Description</label>
                 <textarea type="text" class="form-control" id="description" name="description" rows="5"></textarea>
             </div>
-            <input name="project_id" type="hidden" value="2">
+            <input name="project_id" type="hidden" value="{{ Request::get('project_id') }}">
             <div class="mb-3">
                 <label for="description" class="form-label">Status</label>
                 <select name="status" id="status" class="form-control">
