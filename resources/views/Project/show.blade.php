@@ -24,7 +24,11 @@
             @foreach ($taches ?? '' as $tache)
                 <div class="card border border-dark mb-3 p-3 m-4" style="max-width: 18rem;">
                     <h5 class="card-header rounded-pill " style="border-bottom: none">
-                            {{ $tache->title }}`
+                        @if($tache->status === "Todo")
+                            {{ $tache->title }}
+                        @else
+                            <strike>{{ $tache->title }}</strike>
+                        @endif
                     </h5>
                     <span class="badge rounded-pill bg-warning mt-3">
                     {{ $tache->created_at->diffForHumans() }}
@@ -32,8 +36,19 @@
                     <div class="card-body">
                         <div class="card-text">
                             <div style="min-height: 200px">
-                                {{ $tache->description }}
+                                @if($tache->status === "Todo")
+                                    {{ $tache->description }}
+                                @else
+                                    <strike>{{ $tache->description }}</strike>
+                                @endif
                                 <br>
+
+                                @if($tache->status === "Todo")
+                                    <span class="badge rounded-pill bg-primary">To Do</span>
+                                @else
+                                    <span class="badge rounded-pill bg-success">Done</span>
+                                @endif
+
                             </div>
                             <div class="float-end">
                                 <a href="{{ route('tache.edit', $tache->id) }}"
