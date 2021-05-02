@@ -4,12 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Tache;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
-class TacheController extends Controller
+class ProjectController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return view('Project/index', [
+            'projects' => Project::all()
+        ]);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -18,11 +28,10 @@ class TacheController extends Controller
      */
     public function create()
     {
-        $project = Project::findOrFail(request()->input('project_id'));
-        return view('tache.create', ['statuses' => Tache::getStatuses(), 'project' => $project]);
+        return view('project.create');
     }
 
-    /**ÒÒ
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -31,13 +40,11 @@ class TacheController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:50|min:5',
+            'name' => 'required|string|max:50|min:5',
             'description' => 'required|string|max:500|min:20',
-            'statuses' => Rule::in(Tache::getStatuses()),
-            'project_id' => 'required|exists:projects,id'
         ]);
-        Tache::create($validated);
-        return redirect('project/'.$request->input('project_id'));
+        Project::create($validated);
+        return redirect()->route('project.index');
     }
 
     /**
@@ -46,9 +53,16 @@ class TacheController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($project_id)
     {
-        //
+        $taches = Tache::where('project_id', $project_id)->get();
+        $project = Project::findOrFail($project_id);
+
+        //On passe les taches et l'id du projet à la vue blade
+        return view('project.show', [
+            'taches' => $taches,
+            'project' => $project
+        ]);
     }
 
     /**
@@ -59,10 +73,10 @@ class TacheController extends Controller
      */
     public function edit($id)
     {
-        $tache = Tache::findOrFail($id);
-        $project = $tache->project;
+        $project = Project::findOrFail($id);
 
-        return view('tache.edit', ['statuses' => Tache::getStatuses(), 'tache' => $tache, 'project' => $project]);
+        return view('project.edit', [
+            'project' => $project ]);
     }
 
     /**
@@ -74,18 +88,16 @@ class TacheController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $tache = Tache::findOrFail($id);
+        $project = Project::findOrFail($id);
         $request->validate([
-            'title' => 'required|string|max:50|min:5',
+            'name' => 'required|string|max:50|min:5',
             'description' => 'required|string|max:500|min:20',
-            'statuses' => Rule::in(Tache::getStatuses())
         ]);
 
-        $tache->title = $request->title;
-        $tache->description = $request->description;
-        $tache->status = $request->status;
-        $tache->save();
-        return redirect('project/'.$request->input('project_id'));
+        $project->name = $request->name;
+        $project->description = $request->description;
+        $project->save();
+        return redirect()->route('project.index');
     }
 
     /**
@@ -96,9 +108,8 @@ class TacheController extends Controller
      */
     public function destroy($id)
     {
-        $tache = Tache::findOrFail($id);
-        $project_id = $tache->project->id;
-        $tache->delete();
-        return redirect('project/'.$project_id);
+        $project = Project::findOrFail($id);
+        $project->delete();
+        return redirect()->route('project.index');
     }
 }

@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Tache extends Model
 {
     use HasFactory;
+    protected $fillable = [ //Tableau fillable sert à définir les champs sur lequel peut agir l'utilisateur
+        'title',
+        'description',
+        'status',
+        'project_id'
+    ];
 
     protected $fillable = [
         'title',
@@ -20,5 +26,9 @@ class Tache extends Model
         return [
             'Todo', 'Done'
         ];
+    }
+
+    public function project() {
+        return $this->belongsTo(Project::class);
     }
 }

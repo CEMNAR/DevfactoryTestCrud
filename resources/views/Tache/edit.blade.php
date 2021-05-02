@@ -1,5 +1,7 @@
 @extends('layouts')
-
+@section('dashboard-title')
+    Editer la tache {{ $tache->title }} du projet {{ $project->name }}
+@endsection
 @section('main-content')
     <div>
         <div class="float-start">
